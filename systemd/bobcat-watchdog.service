@@ -1,0 +1,5 @@
+[Unit]
+Description=BobcatX watchdog checker
+
+[Service]
+ExecStart=/etc/monitor-scripts/bobcat-watchdog.sh
