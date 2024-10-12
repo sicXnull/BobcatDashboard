@@ -1,19 +1,26 @@
 #!/bin/bash
-status=$(cat /var/dashboard/services/PF | tr -d "\n")
+status=$(</var/dashboard/services/PF)
 
 if [[ $status == 'stop' ]]; then
-  systemctl stop lora-pkt-fwd.service
-  echo 'disabled' > /var/dashboard/services/PF
+  sudo docker stop pktfwd
+  echo 'stopping' > /var/dashboard/services/PF
 fi
 
 if [[ $status == 'start' ]]; then
-  systemctl start lora-pkt-fwd.service
+  sudo docker start pktfwd
   echo 'starting' > /var/dashboard/services/PF
 fi
 
 if [[ $status == 'starting' ]]; then
-  pid=$(sudo pgrep lora_pkt_+)
-  if [[ $pid ]]; then
+  miner_status=$(sudo docker inspect --format "{{.State.Running}}" pktfwd)
+  if [[ $miner_status == true ]]; then
     echo 'running' > /var/dashboard/services/PF
+  fi
+fi
+
+if [[ $status == 'stopping' ]]; then
+  miner_status=$(sudo docker inspect --format "{{.State.Running}}" pktfwd)
+  if [[ $miner_status == false ]]; then
+    echo 'disabled' > /var/dashboard/services/PF
   fi
 fi
