@@ -29,7 +29,7 @@ else
       apt-get update
       apt-get --assume-yes install nginx php-fpm php7.4-fpm ngrep gawk php-cli logrotate netcat jq
 
-      # Remove it first if the /var/dashboard is invalid
+      # Remove first if the /var/dashboard is invalid
       if test -e /var/dashboard; then
         rm -f /var/dashboard
       fi
