@@ -12,15 +12,15 @@ if [[ $status == 'start' ]]; then
 fi
 
 if [[ $status == 'starting' ]]; then
-  miner_status=$(sudo docker inspect --format "{{.State.Running}}" pktfwd)
-  if [[ $miner_status == true ]]; then
+  pf_status=$(sudo docker inspect --format "{{.State.Running}}" pktfwd)
+  if [[ $pf_status == true ]]; then
     echo 'running' > /var/dashboard/services/PF
   fi
 fi
 
 if [[ $status == 'stopping' ]]; then
-  miner_status=$(sudo docker inspect --format "{{.State.Running}}" pktfwd)
-  if [[ $miner_status == false ]]; then
+  pf_status=$(sudo docker inspect --format "{{.State.Running}}" pktfwd)
+  if [[ $pf_status == false ]]; then
     echo 'disabled' > /var/dashboard/services/PF
   fi
 fi
