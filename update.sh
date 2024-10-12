@@ -14,11 +14,11 @@ if id -nG admin | grep -qw "sudo"; then
   echo 'Downloading latest release...' > /var/dashboard/logs/dashboard-update.log
   if test -f /var/dashboard/commit-hash; then
     VER=`cat /var/dashboard/commit-hash`
-    wget --no-cache https://codeload.github.com/sicxnull/dash/tar.gz/${VER} -O /tmp/latest.tar.gz
+    wget --no-cache https://codeload.github.com/sicxnull/BobcatDashboard/tar.gz/${VER} -O /tmp/latest.tar.gz
   else
-    wget https://raw.githubusercontent.com/sicxnull/dash/${BRANCH}/version -O /tmp/dashboard_latest_ver
+    wget https://raw.githubusercontent.com/sicxnull/BobcatDashboard/${BRANCH}/version -O /tmp/dashboard_latest_ver
     VER=`cat /tmp/dashboard_latest_ver`
-    wget --no-cache https://codeload.github.com/sicxnull/dash/tar.gz/refs/tags/${VER} -O /tmp/latest.tar.gz
+    wget --no-cache https://codeload.github.com/sicxnull/BobcatDashboard/tar.gz/refs/tags/${VER} -O /tmp/latest.tar.gz
   fi
   cd /tmp
   if test -s latest.tar.gz; then
