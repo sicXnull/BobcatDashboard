@@ -22,7 +22,7 @@ else
     fi
     cd /tmp
     if test -s latest.tar.gz; then
-      rm -rf /tmp/dash-*
+      rm -rf /tmp/BobcatDashboard-*
     
       tar -xzf latest.tar.gz
       cd BobcatDashboard-${VER}
