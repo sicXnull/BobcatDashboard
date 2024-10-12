@@ -25,7 +25,7 @@ else
       rm -rf /tmp/dash-*
     
       tar -xzf latest.tar.gz
-      cd dash-${VER}
+      cd BobcatDashboard-${VER}
       apt-get update
       apt-get --assume-yes install nginx php-fpm php7.4-fpm ngrep gawk php-cli logrotate netcat jq
 
