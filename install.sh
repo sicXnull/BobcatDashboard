@@ -9,16 +9,16 @@ fi
 
 if test -d /var/dashboard; then
   echo 'Dashboard already installed, running an update...'
-  wget https://raw.githubusercontent.com/sicxnull/dash/${BRANCH}/update.sh -O - | sudo bash
+  wget https://raw.githubusercontent.com/sicxnull/BobcatDashboard/${BRANCH}/update.sh -O - | sudo bash
 else
   if id -nG admin | grep -qw "sudo"; then
     if test -f /var/dashboard/commit-hash; then
       VER=`cat /var/dashboard/commit-hash`
-      wget https://codeload.github.com/sicxnull/dash/tar.gz/${VER} -O /tmp/latest.tar.gz
+      wget https://codeload.github.com/sicxnull/BobcatDashboard/tar.gz/${VER} -O /tmp/latest.tar.gz
     else
-      wget https://raw.githubusercontent.com/sicxnull/dash/refs/heads/${BRANCH}/version -O /tmp/dashboard_latest_ver
+      wget https://raw.githubusercontent.com/sicxnull/BobcatDashboard/refs/heads/${BRANCH}/version -O /tmp/dashboard_latest_ver
       VER=`cat /tmp/dashboard_latest_ver`
-      wget https://codeload.github.com/sicxnull/dash/tar.gz/refs/tags/${VER} -O /tmp/latest.tar.gz
+      wget https://codeload.github.com/sicxnull/BobcatDashboard/tar.gz/refs/tags/${VER} -O /tmp/latest.tar.gz
     fi
     cd /tmp
     if test -s latest.tar.gz; then
