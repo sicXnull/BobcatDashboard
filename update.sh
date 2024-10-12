@@ -9,7 +9,7 @@ fi
 
 if id -nG admin | grep -qw "sudo"; then
   rm -rf /tmp/latest.tar.gz
-  rm -rf /tmp/dash-*
+  rm -rf /tmp/BobcatDashboard-*
   mkdir -p /var/dashboard/logs/
   echo 'Downloading latest release...' > /var/dashboard/logs/dashboard-update.log
   if test -f /var/dashboard/commit-hash; then
