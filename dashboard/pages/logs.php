@@ -1,17 +1,9 @@
 <?php
 $info['BobcatVer'] = trim(file_get_contents("/var/dashboard/statuses/bobcat_ver"));
+$logs['miner'] = shell_exec('tail -300 /var/dashboard/logs/helium-miner.log | tac');
+$logs['witnesses'] = shell_exec('tac /var/dashboard/logs/helium-miner.log | grep -E "beacon transmitted | received potential beacon.*len: 52"');
+$logs['errors'] = shell_exec('tail -100 /var/dashboard/logs/helium-miner.log | grep -E "ERRO" | tac');
 
-if ($info['BobcatVer'] == 'X1') {
-	$logs['miner'] = shell_exec('tail -300 /var/dashboard/logs/helium-miner.log | tac');
-	$logs['witnesses'] = shell_exec('tac /var/dashboard/logs/helium-miner.log | grep -E "beacon transmitted | received potential beacon.*len: 52"');
-	$logs['errors'] = shell_exec('tail -100 /var/dashboard/logs/helium-miner.log | grep -E "ERRO" | tac');
-}
-
-if ($info['BobcatVer'] == 'X2') {
-	$logs['miner'] = shell_exec('tail -300 /var/dashboard/logs/helium-miner.log | tac');
-	$logs['witnesses'] = shell_exec('tac /var/dashboard/logs/helium-miner.log | grep -E "beacon transmitted | received potential beacon.*len: 52"');
-	$logs['errors'] = shell_exec('tail -100 /var/dashboard/logs/helium-miner.log | grep -E "ERRO" | tac');
-}
 ?>
 <h1>Bobcat <?php echo $info['BobcatVer']; ?> Miner Dashboard - Logs</h1>
 
