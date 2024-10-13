@@ -1,26 +1,42 @@
 #!/bin/bash
-status=$(</var/dashboard/services/PF)
 
-if [[ $status == 'stop' ]]; then
-  sudo docker stop pktfwd
-  echo 'stopping' > /var/dashboard/services/PF
-fi
+regionFile=$(head -n 1 /var/dashboard/region_config)
 
-if [[ $status == 'start' ]]; then
-  sudo docker start pktfwd
-  echo 'starting' > /var/dashboard/services/PF
-fi
+ln -sf /opt/packet_forwarder/configs/global_conf.json.sx1250."$regionFile" /opt/packet_forwarder/configs/global_conf.json
 
-if [[ $status == 'starting' ]]; then
-  pf_status=$(sudo docker inspect --format "{{.State.Running}}" pktfwd)
-  if [[ $pf_status == true ]]; then
-    echo 'running' > /var/dashboard/services/PF
-  fi
-fi
+if [ "$(docker ps -aq -f name=pktfwd)" ]; then
+    dockerRegion=$(docker inspect --format='{{ index .Config.Env }}' pktfwd | grep -oP 'REGION=\K\w+')
 
-if [[ $status == 'stopping' ]]; then
-  pf_status=$(sudo docker inspect --format "{{.State.Running}}" pktfwd)
-  if [[ $pf_status == false ]]; then
-    echo 'disabled' > /var/dashboard/services/PF
-  fi
+    if [ "$regionFile" != "$dockerRegion" ]; then
+        echo "Region mismatch: Container region is $dockerRegion, config region is $regionFile."
+
+        docker stop pktfwd
+        docker rm pktfwd
+
+        docker run -d --privileged \
+            --name pktfwd \
+            -v /opt/packet_forwarder/configs:/opt/packet_forwarder/configs \
+            -v /opt/packet_forwarder/tools:/opt/packet_forwarder/tools \
+            -e VENDOR=bobcat \
+            -e REGION="$regionFile" \
+            --restart=always \
+            sicnull/pkt_fwd:latest
+
+        echo "Container restarted with region $regionFile."
+    else
+        echo "Regions match. No action needed."
+    fi
+else
+    echo "Container pktfwd does not exist. Starting a new container with region $regionFile."
+
+    docker run -d --privileged \
+        --name pktfwd \
+        -v /opt/packet_forwarder/configs:/opt/packet_forwarder/configs \
+        -v /opt/packet_forwarder/tools:/opt/packet_forwarder/tools \
+        -e VENDOR=bobcat \
+        -e REGION="$regionFile" \
+        --restart=always \
+        sicnull/pkt_fwd:latest
+
+    echo "Container pktfwd started with region $regionFile."
 fi
