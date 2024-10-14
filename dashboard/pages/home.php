@@ -69,23 +69,26 @@ else
 <h2>Enable/disable Services</h2>
 <ul>
 <?php
-if($info['BT'] == 'On')
-{
-echo '<li id="BT_status" class="enabled">';
-echo '<a href="#" onclick="DisableService(\'BT\');" title="Bluetooth advertise enabled">';
-echo '<span class="icon-bluetooth"></span>';
-echo '</a>';
-echo '</li>';
-}
-else
-{
-echo '<li id="BT_status" class="disabled">';
-echo '<a href="#" onclick="EnableService(\'BT\');" title="BlueTooth advertise disabled">';
-echo '<span class="icon-bluetooth_disabled"></span>';
-echo '</a>';
-echo '</li>';
 
-}
+
+//disable for now, will revist
+//if($info['BT'] == 'On')
+//{
+//echo '<li id="BT_status" class="enabled">';
+//echo '<a href="#" onclick="DisableService(\'BT\');" title="Bluetooth advertise enabled">';
+//echo '<span class="icon-bluetooth"></span>';
+//echo '</a>';
+//echo '</li>';
+//}
+//else
+//{
+//echo '<li id="BT_status" class="disabled">';
+//echo '<a href="#" onclick="EnableService(\'BT\');" title="BlueTooth advertise disabled">';
+//echo '<span class="icon-bluetooth_disabled"></span>';
+//echo '</a>';
+//echo '</li>';
+
+//}
 
 if($info['PF'] != 'Disabled')
 {
