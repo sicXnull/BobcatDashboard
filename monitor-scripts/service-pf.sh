@@ -15,6 +15,7 @@ if [ "$(docker ps -aq -f name=pktfwd)" ]; then
 
         docker run -d --privileged \
             --name pktfwd \
+            --network host \
             -v /opt/packet_forwarder/configs:/opt/packet_forwarder/configs \
             -v /opt/packet_forwarder/tools:/opt/packet_forwarder/tools \
             -e VENDOR=bobcat \
@@ -31,6 +32,7 @@ else
 
     docker run -d --privileged \
         --name pktfwd \
+        --network host \
         -v /opt/packet_forwarder/configs:/opt/packet_forwarder/configs \
         -v /opt/packet_forwarder/tools:/opt/packet_forwarder/tools \
         -e VENDOR=bobcat \
