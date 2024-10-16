@@ -2,7 +2,7 @@
 Description=Run the local IP status check every 8 hours.
 
 [Timer]
-OnBootSec=28800
+OnBootSec=30
 OnUnitActiveSec=28800
 AccuracySec=1ms
 
