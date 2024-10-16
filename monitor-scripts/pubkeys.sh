@@ -1,7 +1,6 @@
 #!/bin/bash
 
 ecc_addr=$(i2cdetect -y 5 | grep 60 | awk '{ print $2 }')
-[ "$ecc_addr" != "60" ] && systemctl suspend
 sleep 1
 
 pubkey=$(cat /var/dashboard/statuses/pubkey)
