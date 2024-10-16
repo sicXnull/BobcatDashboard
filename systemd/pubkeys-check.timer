@@ -2,7 +2,7 @@
 Description=Scrape the pubkey every hour
 
 [Timer]
-OnBootSec=3600
+OnBootSec=90
 OnUnitActiveSec=3600
 AccuracySec=1ms
 
