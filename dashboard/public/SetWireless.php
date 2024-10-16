@@ -6,8 +6,7 @@ if (isset($_POST['SSID']) && isset($_POST['password']) &&
     $ssid = escapeshellarg(trim(html_entity_decode($_POST['SSID'])));
     $password = escapeshellarg(trim(html_entity_decode($_POST['password'])));
 
-    $response = "";  // Use this to accumulate output messages
-
+    $response = "";
     // Check if already connected to a Wi-Fi network
     $checkConnectedCommand = "nmcli -t -f DEVICE,TYPE,STATE device | grep wifi | grep connected";
     exec($checkConnectedCommand, $connectedOutput, $connectedReturnVar);
@@ -47,7 +46,6 @@ if (isset($_POST['SSID']) && isset($_POST['password']) &&
         $response .= 'Error connecting to Wi-Fi.';
     }
 
-    // Output the final result in one message
     echo $response;
 
 } else {
