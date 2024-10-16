@@ -2,7 +2,7 @@
 Description=Run the external IP check every 6 hours.
 
 [Timer]
-OnBootSec=21600
+OnBootSec=30
 OnUnitActiveSec=21600
 AccuracySec=1ms
 
