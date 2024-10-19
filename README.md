@@ -20,7 +20,7 @@ This is the Dashboard for Bobcat Miner
 
 1. Connect via SSH to your miner (either using PuTTY or open cmd and type:  ssh admin@YOURIP)
 2. Enter the admin username and the password you set.
-3. Type the following command: wget https://raw.githubusercontent.com/sicxnull/dash/main/install.sh -O - | sudo bash
+3. Type the following command: wget https://raw.githubusercontent.com/sicxnull/BobcatDashboard/main/install.sh -O - | sudo bash
 
 Note: For hackers, You can also install custom version by add the following file before step 3
 
@@ -149,6 +149,4 @@ echo 1193f56 > /var/dashboard/commit-hash
 4. Fix the issue that miner stopped running suddenly on some bobcats.
 5. Fix the issue that bluetooth cannot be turn on after it running for a long time on some bobcats.
 
-## Contribute ##
-If you find some issues or problems when you use the dahsboard. you are always welcome to submit the issue here: https://github.com/Bobcat-X/BobcatDashboard/issues
 
