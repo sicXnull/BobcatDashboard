@@ -26,13 +26,6 @@ $info['BobcatVer'] = trim(file_get_contents("/var/dashboard/statuses/bobcat_ver"
 			</a>
 		</li>
 
-		<li id="update_miner_button">
-			<a href="/index.php?page=updateminer" title="Update Miner">
-				<span class="icon-cloud-check"></span>
-				<span class="button_title">Update Miner</span>
-			</a>
-		</li>
-
 		<li id="set_timezone_button">
 			<a href="#" onclick="SetTimezonePrompt();" title="Set Timezone">
 				<span class="icon-time"></span>
