@@ -38,7 +38,7 @@ $sync = '<li><p style="color:#2BFF97">Fully Synced</p></li><br />';
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-8NGJ6M5PSV');
+  gtag('config', 'G-XXXXXXXX');
 </script>
 <?php
 if ($info['BobcatVer'] == 'X1') {
