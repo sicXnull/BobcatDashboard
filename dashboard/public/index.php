@@ -32,7 +32,7 @@ $sync = '<li><p style="color:#2BFF97">Fully Synced</p></li><br />';
 <script src="js/jquery-2.1.4.min.js"></script>
 <script src="js/functions.js"></script>
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8NGJ6M5PSV"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
