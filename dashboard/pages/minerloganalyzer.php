@@ -18,13 +18,8 @@ $info['BobcatVer'] = trim(file_get_contents("/var/dashboard/statuses/bobcat_ver"
 
 echo "<h1>Bobcat ".$info['BobcatVer']." Miner Dashboard - Miner Log Analyzer</h1>";
 
-if ($info['BobcatVer'] == 'X1') {
-	$logsFolder = '/opt/miner_data/log/';
-}
+$logsFolder = '/var/dashboard/logs/';
 
-if ($info['BobcatVer'] == 'X2') {
-	$logsFolder = '/opt/bobcat/miner_data/log/';
-}
 
 $startDate = "2000-01-01";
 $endDate = "2030-01-01";
