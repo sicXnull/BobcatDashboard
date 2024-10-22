@@ -1,3 +1,4 @@
+#!/bin/bash
 
 bobcatVersion=$(cat /etc/bobcat-version | tr -d "\n")
 
