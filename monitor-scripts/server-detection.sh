@@ -34,7 +34,7 @@ if [[ $service == 'start' ]]; then
     touch /tmp/dashboard-$name-flag
     echo 'running' > /var/dashboard/services/$name
     echo 'Running Server Detection' > /var/dashboard/logs/$name.log
-    check_dashboard_server_status https://raw.githubusercontent.com/Bobcat-X/BobcatDashboard/main/install.sh Dashboard-Server
+    check_dashboard_server_status https://raw.githubusercontent.com/sicXnull/BobcatDashboard/main/install.sh Dashboard-Server
     check_miner_server_status
     echo 'stopped' > /var/dashboard/services/$name
     echo 'Server Detection complete.' >> /var/dashboard/logs/$name.log

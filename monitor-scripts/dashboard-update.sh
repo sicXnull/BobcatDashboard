@@ -12,5 +12,5 @@ fi
 if [[ $service == 'start' ]]; then
   touch /tmp/dashboard-$name-flag
   echo 'running' > /var/dashboard/services/$name
-  wget https://raw.githubusercontent.com/Bobcat-X/BobcatDashboard/main/update.sh -O - | sudo bash
+  wget https://raw.githubusercontent.com/sicXnull/BobcatDashboard/main/update.sh -O - | sudo bash
 fi

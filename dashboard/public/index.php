@@ -41,12 +41,10 @@ $sync = '<li><p style="color:#2BFF97">Fully Synced</p></li><br />';
   gtag('config', 'G-XXXXXXXX');
 </script>
 <?php
-if ($info['BobcatVer'] == 'X1') {
-    echo '<link rel="shortcut icon" href="favicon-x1.ico" type="image/x-icon" />';
-} elseif ($info['BobcatVer'] == 'X2') {
-    echo '<link rel="shortcut icon" href="favicon-x2.ico" type="image/x-icon" />';
-}
+
+    echo '<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />';
 ?>
+
 
 <title>Bobcat <?php echo $info['BobcatVer']; ?> Miner Dashboard</title>
 </head>

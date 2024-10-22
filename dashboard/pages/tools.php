@@ -39,12 +39,5 @@ $info['BobcatVer'] = trim(file_get_contents("/var/dashboard/statuses/bobcat_ver"
 				<span class="button_title">Set Region</span>
 			</a>
 		</li>
-		
-		<li id="server_detection_button">
-			<a href="/index.php?page=serverdetection" title="Server Detection">
-				<span class="icon-hammer"></span>
-				<span class="button_title">Server Detection</span>
-			</a>
-		</li>
 	</ul>
 </div>

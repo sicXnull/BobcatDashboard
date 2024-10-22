@@ -22,7 +22,10 @@ $pretty = array("LAN", "WLAN");
 
 $info['IP'] = str_replace($raw, $pretty, trim(file_get_contents("/var/dashboard/statuses/local-ip")));
 $info['ExternalIP'] = trim(file_get_contents("/var/dashboard/statuses/external-ip"));
-$info['CPU'] = $load[0];
+$load = sys_getloadavg();
+$cpuCores = shell_exec("nproc");
+$info['CPU'] = round(($load[0] / $cpuCores) * 100, 2);
+
 
 $pf = trim(file_get_contents("/var/dashboard/statuses/packet-forwarder"));
 $info['BT'] = trim(ucfirst(file_get_contents("/var/dashboard/statuses/bt")));
@@ -51,12 +54,14 @@ else
 	$info['PF'] = 'Disabled';
 }
 ?>
-
+<?php
+$info['BobcatVer'] = trim(file_get_contents("/var/dashboard/statuses/bobcat_ver"));
+?>
 <div id="miner_info">
-<h2>Miner Information</h2>
+<h2>Bobcat <?php echo $info['BobcatVer']; ?> Miner Information</h2>
 <ul>
 <li>IP: <strong><?php echo $info['IP'].' / '.$info['ExternalIP']; ?></strong></li>
-<li>CPU: <?php echo $info['CPU']; ?></li>
+<li>CPU: <?php echo $info['CPU']; ?>%</li>
 <li>Mem: <?php echo $info['MemUsed']." / ".$info['MemTotal']." - ".$info['MemUsage']; ?></li>
 <li>Disk: <?php echo $info['DiskUsage']; ?></li>
 <li>Temp: <?php echo $info['Temp']; ?></li>
