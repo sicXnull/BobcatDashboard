@@ -4,8 +4,8 @@
  *
  * Extracts witness data from lora packet forwarder
  *
- * @author     Iñigo Flores
- * @copyright  2022 Iñigo Flores
+ * @author     IÃ±igo Flores
+ * @copyright  2022 IÃ±igo Flores
  *             2022 Fengling
  * @license    https://opensource.org/licenses/MIT  MIT License
  * @version    0.02
@@ -230,18 +230,16 @@ function extractData($logsPath, $startDate = "", $endDate = ""){
  * @return string
  */
 function generateStats($packets) {
-
     if (empty($packets)) {
         return("<br><br><br><h2>No packets found</h2>");
     }
 
     $systemDate = new DateTime();
-
-    $startTime = DateTime::createFromFormat('Y-m-d H:i:s',$packets[0]['datetime'], new DateTimeZone( 'UTC' ));
-    $endTime = DateTime::createFromFormat('Y-m-d H:i:s',end($packets)['datetime'], new DateTimeZone( 'UTC' ));
-    $intervalInHours = ($endTime->getTimestamp() - $startTime->getTimestamp())/3600;
+    $startTime = DateTime::createFromFormat('Y-m-d H:i:s', $packets[0]['datetime'], new DateTimeZone('UTC'));
+    $endTime = DateTime::createFromFormat('Y-m-d H:i:s', end($packets)['datetime'], new DateTimeZone('UTC'));
+    $intervalInHours = ($endTime->getTimestamp() - $startTime->getTimestamp()) / 3600;
     $intervalInHours = $intervalInHours ? $intervalInHours : 1;
-    $intervalInDays = ($endTime->getTimestamp() - $startTime->getTimestamp())/3600/24;
+    $intervalInDays = ($endTime->getTimestamp() - $startTime->getTimestamp()) / 3600 / 24;
     $intervalInDays = $intervalInDays ? $intervalInDays : 1;
 
     $startTime->setTimezone($systemDate->getTimezone());
@@ -251,13 +249,22 @@ function generateStats($packets) {
     $totalPackets = sizeOf($packets);
     $lowestWitnessRssi = $lowestPacketRssi = 0;
 
+    // Array to track unique packets based on their hash
+    $uniquePackets = [];
+
     $witnessDataByFrequency = [];
-    foreach ($packets as $packet){
+    foreach ($packets as $packet) {
+        // Check for uniqueness using the hash
+        if (in_array($packet['hash'], $uniquePackets)) {
+            continue; // Skip this packet as it is a duplicate
+        }
 
-        if ($packet['type']=='tx data') {
+        // Add the packet hash to the unique array
+        $uniquePackets[] = $packet['hash'];
+
+        if ($packet['type'] == 'tx data') {
             continue;
-
-        } else if ($packet['type']=='beacon') {
+        } else if ($packet['type'] == 'beacon') {
             $totalBeacons++;
             continue;
         }
@@ -269,7 +276,7 @@ function generateStats($packets) {
             $lowestPacketRssi = $packet['rssi'];
         }
 
-        if ($packet['type']=='witness') {
+        if ($packet['type'] == 'witness') {
             $totalWitnesses++;
             $witnessDataByFrequency["{$packet['freq']}"]['rssi'][] = $packet['rssi'];
             $witnessDataByFrequency["{$packet['freq']}"]['snr'][] = $packet['snr'];
@@ -279,79 +286,80 @@ function generateStats($packets) {
             }
         }
     }
+
     foreach ($packetDataByFrequency as $freq => $rssifreq) {
-        $packetRssiAverages["{$freq}"] = number_format(getMean($packetDataByFrequency["{$freq}"]['rssi']),2);
-        $packetRssiMins["{$freq}"] = number_format(min($packetDataByFrequency["{$freq}"]['rssi']),2);
-        $packetSnrAverages["{$freq}"] =  number_format(getMean($packetDataByFrequency["{$freq}"]['snr']),2);
+        $packetRssiAverages["{$freq}"] = number_format(getMean($packetDataByFrequency["{$freq}"]['rssi']), 2);
+        $packetRssiMins["{$freq}"] = number_format(min($packetDataByFrequency["{$freq}"]['rssi']), 2);
+        $packetSnrAverages["{$freq}"] = number_format(getMean($packetDataByFrequency["{$freq}"]['snr']), 2);
     }
 
     foreach ($witnessDataByFrequency as $freq => $rssifreq) {
-        $witnessRssiAverages["{$freq}"] = number_format(getMean($witnessDataByFrequency["{$freq}"]['rssi']) ,2);
-        $witnessRssiMins["{$freq}"] = number_format(min($witnessDataByFrequency["{$freq}"]['rssi']) ,2);
-        $witnessSnrsAverages["{$freq}"] =  number_format(getMean($witnessDataByFrequency["{$freq}"]['snr']),2);
+        $witnessRssiAverages["{$freq}"] = number_format(getMean($witnessDataByFrequency["{$freq}"]['rssi']), 2);
+        $witnessRssiMins["{$freq}"] = number_format(min($witnessDataByFrequency["{$freq}"]['rssi']), 2);
+        $witnessSnrsAverages["{$freq}"] = number_format(getMean($witnessDataByFrequency["{$freq}"]['snr']), 2);
     }
 
     $freqs = array_keys($packetDataByFrequency);
     sort($freqs);
 
-    $totalPacketsPerHour = number_format(round($totalPackets / $intervalInHours,2),2,".","");
-    $totalWitnessesPerHour = number_format(round($totalWitnesses / $intervalInHours,2), 2,".","");
-    $totalBeaconsPerDay = number_format(round($totalBeacons / $intervalInDays,2), 2,".","");
+    $totalPacketsPerHour = number_format(round($totalPackets / $intervalInHours, 2), 2, ".", "");
+    $totalWitnessesPerHour = number_format(round($totalWitnesses / $intervalInHours, 2), 2, ".", "");
+    $totalBeaconsPerDay = number_format(round($totalBeacons / $intervalInDays, 2), 2, ".", "");
 
-    $totalPacketsPerHour = str_pad("($totalPacketsPerHour",9, " ", STR_PAD_LEFT);;
-    $totalWitnessesPerHour = str_pad("($totalWitnessesPerHour",9, " ", STR_PAD_LEFT);;
-    $totalBeaconsPerDay = str_pad("($totalBeaconsPerDay",9, " ", STR_PAD_LEFT);;
+    $totalPacketsPerHour = str_pad("($totalPacketsPerHour", 9, " ", STR_PAD_LEFT);
+    $totalWitnessesPerHour = str_pad("($totalWitnessesPerHour", 9, " ", STR_PAD_LEFT);
+    $totalBeaconsPerDay = str_pad("($totalBeaconsPerDay", 9, " ", STR_PAD_LEFT);
 
-    $totalWitnesses = str_pad($totalWitnesses,7, " ", STR_PAD_LEFT);
-    $totalBeacons = str_pad($totalBeacons,7, " ", STR_PAD_LEFT);
-    $totalPackets = str_pad($totalPackets,7, " ", STR_PAD_LEFT);
-    $lowestPacketRssi = str_pad($lowestPacketRssi,7," ",STR_PAD_LEFT);
-    $lowestWitnessRssi = str_pad($lowestWitnessRssi,7," ",STR_PAD_LEFT);
-    $intervalInHoursStr = round($intervalInHours,1);
+    $totalWitnesses = str_pad($totalWitnesses, 7, " ", STR_PAD_LEFT);
+    $totalBeacons = str_pad($totalBeacons, 7, " ", STR_PAD_LEFT);
+    $totalPackets = str_pad($totalPackets, 7, " ", STR_PAD_LEFT);
+    $lowestPacketRssi = str_pad($lowestPacketRssi, 7, " ", STR_PAD_LEFT);
+    $lowestWitnessRssi = str_pad($lowestWitnessRssi, 7, " ", STR_PAD_LEFT);
+    $intervalInHoursStr = round($intervalInHours, 1);
 
     $output = '<br><br><p><br><h2 style="color:#AED6F1;">General Overview</h2></p><br>';
-    $output.='<table border="1" style="width: 100%; height: 100%">';
-    $output.= "
+    $output .= '<table border="1" style="width: 100%; height: 100%">';
+    $output .= "
         <tr border='1' align='left' style='color:#FCF3CF ;' >
         <th style='width:50%'> Description </th>
         <th align='left'> Value </th>
         </tr>";
-    $output.="
+    $output .= "
         <tr border='1'>
             <td> First Packet </td>
             <td> {$startTime->format("d-m-Y H:i:s")} </td>
         </tr>";
-    $output.="
+    $output .= "
         <tr border='1'>
             <td> Last Packet </td>
             <td> {$endTime->format("d-m-Y H:i:s")} ({$intervalInHoursStr} hours) </td>
         </tr>";
-    $output.="
+    $output .= "
         <tr border='1'>
             <td> Total Witnesses </td>
             <td> {$totalWitnesses} {$totalWitnessesPerHour}/hour) </td>
         </tr>";
-    $output.="
+    $output .= "
         <tr border='1'>
             <td> Total Packets </td>
             <td> {$totalPackets} {$totalPacketsPerHour}/hour) </td>
         </tr>";
-    $output.="
+    $output .= "
         <tr border='1'>
             <td> Total Beacons </td>
             <td> {$totalBeacons} {$totalBeaconsPerDay}/day) </td>
         </tr>";
-    $output.="
+    $output .= "
         <tr border='1'>
             <td> Lowest Witness RSSI </td>
             <td> {$lowestWitnessRssi} dBm </td>
         </tr>";
-    $output.="
+    $output .= "
         <tr border='1'>
             <td> Lowest Packet RSSI </td>
             <td> {$lowestPacketRssi} dBm </td>
         </tr>";
-    $output.= "</table>";
+    $output .= "</table>";
 
     $output.= '<br><p><br><h2 style="color:#AED6F1;">Packets Statistics</h2></p>';
     $output.='<table border="1" style="width: 100%; height: 100%">';
@@ -417,19 +425,17 @@ function generateStats($packets) {
  * @return string
  */
 function generateList($packets, $includeDataPackets = false, $showPayloadData = false) {
-
     if (empty($packets)) {
         return;
     }
 
     $systemDate = new DateTime();
-    $utc = new DateTimeZone( 'UTC' );
-
-    $dataFieldName = ($showPayloadData)?"Data":"Hash";
+    $utc = new DateTimeZone('UTC');
+    $dataFieldName = ($showPayloadData) ? "Data" : "Hash";
 
     $output = '<br><p><br><h2 style="color:#AED6F1;">Witnesses List</h2></p>';
-    $output.= '<br><table border="1" style="width: 100%; height: 100%">';
-    $output.="
+    $output .= '<br><table border="1" style="width: 100%; height: 100%">';
+    $output .= "
             <tr style='color:#FCF3CF ;'>
             <th align='left'>Date</th>
             <th align='left'>Freq</th>
@@ -441,17 +447,28 @@ function generateList($packets, $includeDataPackets = false, $showPayloadData = 
             <th align='left'>{$dataFieldName}</th>
             </tr>";
 
-    foreach (array_reverse($packets) as $packet){
-        if (($packet['type']=="tx data" || $packet['type']=="rx data") && !$includeDataPackets){
+    // Array to track unique packets based on their hash
+    $uniquePackets = [];
+
+    foreach (array_reverse($packets) as $packet) {
+        if (($packet['type'] == "tx data" || $packet['type'] == "rx data") && !$includeDataPackets) {
             continue;
         }
 
-        $datetime = DateTime::createFromFormat('Y-m-d H:i:s',$packet['datetime'], $utc);
+        // Check for uniqueness using the hash
+        if (in_array($packet['hash'], $uniquePackets)) {
+            continue; // Skip this packet as it is a duplicate
+        }
+
+        // Add the packet hash to the unique array
+        $uniquePackets[] = $packet['hash'];
+
+        $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $packet['datetime'], $utc);
         $datetime->setTimezone($systemDate->getTimezone());
 
         $rssi = $packet['rssi'];
 
-        if ($packet['type']=="witness"||$packet['type']=="rx data"){
+        if ($packet['type'] == "witness" || $packet['type'] == "rx data") {
             $noise = number_format((float)($packet['rssi'] - $packet['snr']));
         } else {
             $noise = "";
@@ -469,8 +486,8 @@ function generateList($packets, $includeDataPackets = false, $showPayloadData = 
         }
 
         $datetimeStr = $datetime->format("d-m-Y H:i:s");
-        $output.="
-            <tr border='1' align='left' style='font-size: 10px;' >
+        $output .= "
+            <tr border='1' align='left' style='font-size: 10px;'>
             <td> {$datetimeStr} </td>
             <td> {$packet['freq']} </td>
             <td> {$rssi} </td>
@@ -481,9 +498,10 @@ function generateList($packets, $includeDataPackets = false, $showPayloadData = 
             <td> {$dataField} </td>
             </tr>";
     }
-    $output.="</table>";
+    $output .= "</table>";
     return $output;
 }
+
 
 
 /**
@@ -574,7 +592,7 @@ function generateHistogramASCIIChart($histogramData)
     foreach ($histogramData as $date => $number){
         $output.= "$date ";
         for ($i=0; $i < $number/$maxValue*$cols; $i++) {
-            $output.= "■";
+            $output.= "â– ";
         }
         $output.= " $number" . PHP_EOL;
     }
