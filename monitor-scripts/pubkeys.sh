@@ -1,17 +1,14 @@
 #!/bin/bash
 
-ecc_addr=$(i2cdetect -y 5 | grep 60 | awk '{ print $2 }')
-sleep 1
+output=$(docker exec helium-miner helium_gateway key info)
 
-pubkey=$(cat /var/dashboard/statuses/pubkey)
-[ "$pubkey" != "" ] && exit
+name=$(echo "$output" | jq -r '.name')
+key=$(echo "$output" | jq -r '.key')
 
-data=$(sudo docker logs helium-miner | grep 'INFO run: gateway_rs::server' | tail -n 1)
-
-if [[ $data =~ key=([^ ]+) ]]; then
-  match="${BASH_REMATCH[1]}"
+if [ -n "$name" ]; then
+    echo "$name" > /var/dashboard/statuses/animal_name
 fi
 
-echo "${match//-/ }" > /var/dashboard/statuses/animal_name
-
-echo $match > /var/dashboard/statuses/pubkey
+if [ -n "$key" ]; then
+    echo "$key" > /var/dashboard/statuses/pubkey
+fi
