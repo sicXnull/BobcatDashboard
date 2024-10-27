@@ -71,7 +71,7 @@ $info['BobcatVer'] = trim(file_get_contents("/var/dashboard/statuses/bobcat_ver"
 </div>
 
 <div id="toggle_buttons">
-<h2>Enable/disable Services</h2>
+<h2>Enable/Disable Services</h2>
 <ul>
 <?php
 
