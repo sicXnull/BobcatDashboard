@@ -2,48 +2,27 @@
 if (isset($_POST['SSID']) && isset($_POST['password']) && 
     ($_POST['SSID'] != '' && $_POST['password'] != "")) {
 
-    // Sanitize input
-    $ssid = escapeshellarg(trim(html_entity_decode($_POST['SSID'])));
-    $password = escapeshellarg(trim(html_entity_decode($_POST['password'])));
+    $ssid = trim(html_entity_decode($_POST['SSID']));
+    $password = trim(html_entity_decode($_POST['password']));
 
     $response = "";
-    // Check if already connected to a Wi-Fi network
-    $checkConnectedCommand = "nmcli -t -f DEVICE,TYPE,STATE device | grep wifi | grep connected";
-    exec($checkConnectedCommand, $connectedOutput, $connectedReturnVar);
 
-    if ($connectedReturnVar === 0) {
-        // A Wi-Fi connection is already active, disconnect it
-        $response .= 'Active Wi-Fi connection found. Disconnecting... ';
-        $disconnectCommand = "sudo nmcli device disconnect wifi";
-        exec($disconnectCommand, $disconnectOutput, $disconnectReturnVar);
+    $iwctlCommand = "sudo iwctl station wlan0 connect '$ssid' --passphrase '$password'";
+    exec($iwctlCommand . " 2>&1", $iwctlOutput, $iwctlReturnVar);
 
-        if ($disconnectReturnVar === 0) {
-            $response .= 'Disconnected successfully. ';
+    if ($iwctlReturnVar === 0) {
+        $response .= "Connected to Wi-Fi network: " . htmlentities($ssid) . ". ";
+        
+        $dhclientCommand = "sudo dhclient wlan0";
+        exec($dhclientCommand . " 2>&1", $dhclientOutput, $dhclientReturnVar);
+
+        if ($dhclientReturnVar === 0) {
+            $response .= "DHCP client started successfully on wlan0.";
         } else {
-            $response .= 'Warning: Could not disconnect active Wi-Fi connection. ';
+            $response .= "Error starting DHCP client: " . implode("\n", $dhclientOutput);
         }
-    }
-
-    // Delete all existing Wi-Fi connections
-    $response .= 'Cleaning up old Wi-Fi connections... ';
-    $deleteCommand = "sudo nmcli connection show | grep wifi | awk '{print $1}' | xargs -r sudo nmcli connection delete";
-    exec($deleteCommand, $deleteOutput, $deleteReturnVar);
-
-    if ($deleteReturnVar === 0) {
-        $response .= 'All existing Wi-Fi connections removed. ';
     } else {
-        $response .= 'Error deleting Wi-Fi connections. ';
-    }
-
-    // Connect to the new Wi-Fi network
-    $response .= "Connecting to Wi-Fi network: " . htmlentities($_POST['SSID']) . "... ";
-    $command = "sudo nmcli device wifi connect $ssid password $password";
-    exec($command, $output, $return_var);
-
-    if ($return_var === 0) {
-        $response .= 'Connected successfully!';
-    } else {
-        $response .= 'Error connecting to Wi-Fi.';
+        $response .= "Error connecting to Wi-Fi network: " . implode("\n", $iwctlOutput);
     }
 
     echo $response;
